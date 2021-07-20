@@ -1,7 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Date;
+import java.util.*;
 import java.sql.Timestamp;
 
 /**
@@ -123,7 +121,7 @@ public class PostDriver {
                                 //edit content
                                 case "2":
                                     System.out.println("Enter the new content");
-                                    userPosts.get(input1).setAuthor(scan.nextLine());
+                                    userPosts.get(input1).setContent(scan.nextLine());
                                     quit2 = false;
                                     break;
 
@@ -187,6 +185,8 @@ public class PostDriver {
 
                 //view all posts
                 case "4":
+                    Collections.sort(posts, new SortByDate());
+
                     for (int i = 0; i < posts.size(); i++) {
                         System.out.println("\n" + formatPost(posts.get(i)));
                     }
@@ -194,6 +194,8 @@ public class PostDriver {
 
                 //search for all of a user's comments and posts
                 case "5":
+                    SearchCommentPost search = new SearchCommentPost(posts);
+                    search.searchPosts();
                     break;
 
                 //create, edit, or delete a comment
@@ -203,11 +205,12 @@ public class PostDriver {
 
                 //import post
                 case "7":
-
+                    posts.addAll(PostCSVHandler.getInstance().importFromCSV(scan));
                     break;
 
                 //export post
                 case "8":
+                	PostCSVHandler.getInstance().saveToCSV(posts, scan);
                     break;
 
                 //quit
